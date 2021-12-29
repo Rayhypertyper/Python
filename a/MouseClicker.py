@@ -1,5 +1,5 @@
 import pyautogui
-i = 1
-while i < 5:
+pyautogui.PAUSE = 0.0000000000000001
+while True:
         pyautogui.click()
         
