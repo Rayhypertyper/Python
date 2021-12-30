@@ -1,25 +1,29 @@
-x = int(input())
-y = int(input())
-z = 0
-b = 1
+inputo = int(input())
+outputo = int(input())
+x = inputo
+divisor = 1
 factorcounter = 0
 numcounter = 0
-v = x - 1
-k = x
-t = x
 
-for c in range(x):
-  if x % b == 0:
-    factorcounter+=1
-  b+=1
-  if factorcounter == 4 and x == k:
-    factorcounter == 0
-    numcounter+=1
 
-  if x == b:
-    x+=1
-    k+=1
-    b = 1
-  if x == y:
-    break
- 
+
+while True:
+    if x % divisor == 0:
+        factorcounter+=1
+    if x == divisor and factorcounter == 4:
+        numcounter+=1
+        x+=1
+        divisor = 0
+        factorcounter = 0
+        c = factorcounter
+    elif x == divisor:
+        x+=1
+        divisor = 0
+        factorcounter = 0
+        c = factorcounter
+    divisor+=1
+    if x == outputo + 1:
+        break
+
+print("The number of RSA numbers between " + str(inputo) + " and " + str(outputo) + " is " + str(numcounter))
+  
