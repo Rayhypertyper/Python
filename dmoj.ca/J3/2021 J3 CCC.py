@@ -18,4 +18,4 @@ while x != '99999':
         print(x[2], end='')
         print(x[3], end='')
         print(x[4])
-    x = str(input())int()
+    x = str(input())
