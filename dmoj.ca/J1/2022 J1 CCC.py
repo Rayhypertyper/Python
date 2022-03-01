@@ -1,5 +1,3 @@
 x = int(input())
 y = int(input())
-z = int(input())
-days = 0
-while 
+print((x*8 + y*3) - 28)

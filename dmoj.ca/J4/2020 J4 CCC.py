@@ -1,24 +1,28 @@
-x = input() 
-y = input() 
-reference = list(x) 
-reference2 = list(y)
-arr = [] 
-g = 0 
-r = 0
-for i in range(len(x) - len(y) + 1): 
-    for k in range(len(y)): 
-        arr.append(reference[g])
-        g+=1 
-        arr.sort() 
-    reference2.sort()
-    if arr == reference2:
-        r+=1
-        print('yes')
+x = list(input()) 
+y = list(input())
+stop = False
+for i in range(len(x) - len(y) + 1):
+    arr = x[i:(i+len(y))]
+    for k in range(len(y)):
+        if arr == y:
+            print('yes')
+            stop = not stop
+            break
+        arr.append(arr[0])
+        arr.pop(0)
+    if stop == True:
         break
-    g-=len(y) - 1
-    arr.clear()
-if r == 0: 
+if stop == False:
     print('no')
 
-  
+
+
+
+
+
+
+
+
+
+
   

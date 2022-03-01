@@ -1,15 +1,16 @@
-word="+++===!!!!" #word = "1"
-count=1
-length=""
-if len(word)>1:
-    for i in range(1,len(word)):
-       if word[i-1]==word[i]:
-          count+=1
-       else :
-           length += word[i-1]+" repeats "+str(count)
-           count=1
-    length += ("and "+word[i]+" repeats "+str(count))
-else:
-    i=0
-    length += ("and "+word[i]+" repeats "+str(count))
-print (length)
+x = int(input())
+y = int(input())
+truecount = 0
+falsecount = 0
+arr = [ [False]*y for p in range (x)]
+z = int(input())
+for i in range(z*y):
+    e = list(input().split())
+    if e[0] == 'R':
+        for k in range(y):
+            arr[int(e[1])-1][k] = not arr[int(e[1])-1][k] 
+    elif e[0] == 'C':
+        for j in range(x):
+            arr[j][int(e[1])-1] = not arr[j][int(e[1])-1]
+h = sum(row.count(True) for row in arr)
+print(h)
