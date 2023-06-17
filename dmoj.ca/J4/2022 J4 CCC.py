@@ -74,21 +74,25 @@
 # #                 pass
 # # print(count)
 x = int(input())
-y = int(input())
-z = int(input())
 arr = []
 my_dict = dict()
 my_dikt = dict()
 for i in range(x):
     inp = input().split()
     my_dict[inp[0]] = inp[1]
+    my_dict[inp[1]] = inp[0]
+y = int(input())
 for i in range(y):
     inpt = input().split()
     my_dikt[inpt[0]] = inpt[1]
+    my_dikt[inpt[1]] = inpt[0]
+z = int(input())
 for i in range(z):
     g = input().split()
     arr.append(g)
-for i in arr:
+print(arr)
+print(my_dict)
+print(my_dikt)
     
 
 
