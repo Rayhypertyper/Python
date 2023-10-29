@@ -35,3 +35,63 @@ for i in arr:
         total+=rows
         colcount+=1
 print(total-(rowcount*colcount*2))
+
+#Smart Solution
+
+ 
+
+m = int(input())
+
+n = int(input())
+
+ 
+
+row = []
+
+for i in range(m):
+
+    row.append(0)
+
+ 
+
+col = []
+
+for i in range(n):
+
+    col.append(0)
+
+ 
+
+k = int(input())
+
+ 
+
+for i in range(k):
+
+    userInput = input().split(" ")
+
+    if(userInput[0] == "R"):
+
+        row[int(userInput[1]) - 1] += 1
+
+    else:
+
+        col[int(userInput[1]) - 1] += 1
+
+ 
+
+count = 0
+
+ 
+
+for i in range(m):
+
+    for j in range(n):
+
+        if ((row[i] + col[j]) % 2 != 0):
+
+            count += 1
+
+ 
+
+print(count)
