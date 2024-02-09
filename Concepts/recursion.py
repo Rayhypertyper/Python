@@ -11,6 +11,20 @@ def sumnum(y):
     else:
         return y + sumnum(y-1)
 print(sumnum(5))
-
-def listperm(x):
+#____________________________
+x = int(input())
+def fib(depth,a,b,x):
+    if x == 0:
+        return
+    if x == 1:
+        print(1)
+        return
+    c = b
+    b = a+b
+    a = c
+    print(a)
+    if x == depth+1:
+        return
+    fib(depth+1,a,b,x)
+fib(0,0,1,x)
     

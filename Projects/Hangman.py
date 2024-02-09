@@ -1,8 +1,8 @@
-# from Words import words
+from Words import words
+from Words import my_dict
 print('Welcome to hangman :)')
 print()
 while True:    
-    from Words import words, my_dict
     import random
     import time
     import sys
