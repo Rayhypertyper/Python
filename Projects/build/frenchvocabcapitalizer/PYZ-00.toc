@@ -1,4 +1,4 @@
-('C:\\Users\\Kai\\Workspace\\Python\\Projects\\build\\frenchvocabcapitalizer\\PYZ-00.pyz',
+('C:\\Users\\Kai\\Workspace\\python\\projects\\build\\frenchvocabcapitalizer\\PYZ-00.pyz',
  [('_compat_pickle',
    'c:\\users\\kai\\appdata\\local\\programs\\python\\python38\\lib\\_compat_pickle.py',
    'PYMODULE'),

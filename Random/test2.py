@@ -1,86 +1,215 @@
-from tkinter import *
-import sqlite3
+import pygame
+import random
+import time
+import sys
 
+# Initialize Pygame
+pygame.init()
 
-root = Tk()
-root.title('databazio')
-root.geometry("400x400")
-conn = sqlite3.connect('database.db')
-c = conn.cursor()
+width, height = 1000, 600
+screen = pygame.display.set_mode([width, height])
+pygame.display.set_caption("Typing game in Python!")
+surface = pygame.Surface((width, height), pygame.SRCALPHA)
+timer = pygame.time.Clock()
+text = open('Python/Random/jamall.txt', "r").read().split("\n")
+fps = 60
 
-# c.execute("""CREATE TABLE addresses (
-#     first_name text,
-#     last_name,
-#     city text,
-#     country text,
-#     fav_num integer
-# )""")
-def submit():
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("INSERT INTO addresses VALUES (:f_name, :l_name, :city, :country, :fav_num)",
-        {
-            'f_name':f_name.get(),
-            'l_name':l_name.get(),
-            'city':city.get(),
-            'country':country.get(),
-            'fav_num':fav_num.get()
-        }
+# Game variables
+wpm = 0
+accuracy = 100
+high_score = 0
+streak = 0
+current_text = random.choice(text)
+typed_text = ''
+start_time = None
+game_active = False
+
+# Fonts
+header_font = pygame.font.Font('Python/Random/Square.ttf', 50)
+banner_font = pygame.font.Font('Python/Random/Square.ttf', 28)
+gfont = pygame.font.Font('Python/Random/RobotoMono-Light.ttf', 22)
+
+# Load the back to menu image
+back_image = pygame.image.load('Python/Random/images-removebg-preview.png')
+back_image = pygame.transform.scale(back_image, (50, 50))
+
+# Load the main menu background image
+background_image = pygame.image.load('Python\Random\cartoon-mouse-computer-keyboard-computer-mouse-typing-laptop-computer-hardware-input-devices-data-png-clipart.jpg')
+background_image = pygame.transform.scale(background_image, (width, height))
+
+def draw_screen():
+    screen.fill('black')
+    pygame.draw.rect(screen, (32, 42, 68), [0, height - 100, width, 100], 0)
+    pygame.draw.rect(screen, 'white', [0, 0, width, height], 5)
+    pygame.draw.line(screen, 'white', (250, height - 100), (250, height), 2)
+    pygame.draw.line(screen, 'white', (700, height - 100), (700, height), 2)
+    pygame.draw.line(screen, 'white', (0, height - 100), (width, height - 100), 2)
+
+    # Display stats
+    screen.blit(header_font.render(f'WPM: {wpm}', True, 'white'), (10, height - 75))
+    screen.blit(header_font.render(f'Accuracy: {accuracy}%', True, 'white'), (270, height - 75))
+    screen.blit(banner_font.render(f'Score: {streak}', True, 'white'), (250, 10))
+    screen.blit(banner_font.render(f'Best: {high_score}WPM', True, 'white'), (550, 10))
+
+    # Display text to type and user input
+    screen.blit(gfont.render(current_text, True, 'white'), (50, 200))
+    screen.blit(gfont.render(typed_text, True, 'green'), (50, 300))
     
-    )
-    conn.commit()
-    conn.close()
+def calculate_wpm(typed_text, start_time):
+    if start_time is None:
+        return 0
+    elapsed_time = time.time() - start_time
+    word_count = len(typed_text.split())
+    if elapsed_time == 0:
+        return 0
+    wpm = (word_count / elapsed_time) * 60
+    return round(wpm)
 
-    f_name.delete(0, END)
-    l_name.delete(0, END)
-    city.delete(0, END)
-    country.delete(0, END)
-    fav_num.delete(0, END)
+def calculate_accuracy(typed_text, current_text):
+    correct_chars = sum(1 for i, c in enumerate(typed_text) if i < len(current_text) and c == current_text[i])
+    accuracy = (correct_chars / len(typed_text)) * 100 if typed_text else 100
+    return round(accuracy)
 
-f_name = Entry(root, width=30)
-f_name.grid(row=0, column=1, padx=20)
+def instructions_menu():
+    instructions = True
+    while instructions:
+        screen.fill((50, 50, 50))
+        title_surface = header_font.render("Instructions", True, (255, 255, 255))
+        title_rect = title_surface.get_rect(center=(width // 2, 50))
+        screen.blit(title_surface, title_rect)
 
-l_name = Entry(root, width=30)
-l_name.grid(row=1, column=1)
+        instructions_text = [
+            "1. Type the displayed text as quickly and accurately as possible.",
+            "2. Your WPM (Words Per Minute) and accuracy will be displayed at the bottom.",
+            "3. Press 'Enter' to submit your input and get a new text.",
+            "4. Press 'Backspace' to correct mistakes.",
+            "5. Click 'Reset' to start over.",
+        ]
+        
+        for i, line in enumerate(instructions_text):
+            line_surface = gfont.render(line, True, (255, 255, 255))
+            line_rect = line_surface.get_rect(topleft=(50, 150 + i * 30))
+            screen.blit(line_surface, line_rect)
 
-city = Entry(root, width=30)
-city.grid(row=2, column=1)
+        back_button = draw_button(screen, "Back", (width // 2 - 100, height - 100), (200, 50), (255, 255, 255), (200, 200, 200))
 
-country = Entry(root, width=30)
-country.grid(row=3, column=1)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if back_button.collidepoint(event.pos):
+                        return "menu"
 
-fav_num = Entry(root, width=30)
-fav_num.grid(row=4, column=1)
+        pygame.display.flip()
+        timer.tick(fps)
 
-first_name_label = Label(root, text="First Name")
-first_name_label.grid(row=0, column=0)
-last_name_label = Label(root, text="Last Name")
-last_name_label.grid(row=1, column=0)
-city_label = Label(root, text="City")
-city_label.grid(row=2, column=0)
-country_label = Label(root, text="Country")
-country_label.grid(row=3, column=0)
-fav_num_label = Label(root, text="Fav Num")
-fav_num_label.grid(row=4, column=0)
+def main_menu():
+    menu = True
+    while menu:
+        screen.blit(background_image, (0, 0))  # Draw the background image
+        title_surface = header_font.render("Typing Game", True, (255, 255, 255))
+        title_rect = title_surface.get_rect(center=(width // 2, height // 2 - 100))
+        screen.blit(title_surface, title_rect)
 
-submitbtn = Button(root, text="add record to database", command=submit)
-submitbtn.grid(row=6, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
+        start_button = draw_button(screen, "Start", (width // 2 - 100, height // 2), (200, 50), (255, 255, 255), (200, 200, 200))
+        instructions_button = draw_button(screen, "Instructions", (width // 2 - 150, height // 2 + 60), (300, 50), (255, 255, 255), (200, 200, 200))
+        quit_button = draw_button(screen, "Quit", (width // 2 - 100, height // 2 + 120), (200, 50), (255, 255, 255), (200, 200, 200))
 
-conn.commit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if start_button.collidepoint(event.pos):
+                        return "game"
+                    elif instructions_button.collidepoint(event.pos):
+                        return "instructions"
+                    elif quit_button.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
 
-conn.close()
+        pygame.display.flip()
+        timer.tick(fps)
 
+def draw_button(surface, text, position, size, color, hover_color):
+    mouse_pos = pygame.mouse.get_pos()
+    button_surface = pygame.Surface(size)
+    
+    if pygame.Rect(position, size).collidepoint(mouse_pos):
+        button_surface.fill(hover_color)  # Hover color
+    else:
+        button_surface.fill(color)  # Regular color
+        
+    pygame.draw.rect(button_surface, (0, 0, 0), (0, 0, size[0], size[1]), 2)  # Button border
+    text_surface = header_font.render(text, True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(size[0]//2, size[1]//2))
+    button_surface.blit(text_surface, text_rect)
+    screen.blit(button_surface, position)
+    return pygame.Rect(position, size)
 
+main_menu()
 
+# Main loop
+state = "menu"
+while True:
+    if state == "menu":
+        state = main_menu()
+    elif state == "instructions":
+        state = instructions_menu()
+    elif state == "game":
+        run = True
+        while run:
+            timer.tick(fps)
+            draw_screen()
 
+            reset_button = draw_button(screen, "Reset", (750, height - 75), (200, 50), (255, 255, 255), (192, 192, 192))
+            back_button_rect = screen.blit(back_image, (width - 60, 10))
 
+            if typed_text == current_text[:len(typed_text)]:
+                screen.blit(gfont.render(typed_text, True, 'green'), (50, 300))
+            else:
+                screen.blit(gfont.render(typed_text, True, 'red'), (50, 300))
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        current_text = random.choice(text)
+                        typed_text = ""
+                        start_time = None
+                    elif event.key == pygame.K_BACKSPACE:
+                        typed_text = typed_text[:-1]
+                    else:
+                        if start_time is None:
+                            start_time = time.time()
+                        typed_text += event.unicode
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1 and reset_button.collidepoint(event.pos):
+                        # Reset the game state
+                        typed_text = ""
+                        current_text = random.choice(text)
+                        start_time = None
+                        streak = 0
+                        wpm = 0
+                        accuracy = 100
+                    elif back_button_rect.collidepoint(event.pos):
+                        run = False
+                        state = "menu"
 
+            if typed_text == current_text:
+                if wpm > high_score:
+                    high_score = wpm
 
+            elif typed_text:
+                wpm = calculate_wpm(typed_text, start_time)
+                accuracy = calculate_accuracy(typed_text, current_text)
 
+            pygame.display.flip()
+        if state != "menu":
+            break
 
-#query_btn = Button(root, text="Show Records", command=query)
-#query_btn.grid(row=7, column=0, columnspan=2, pady=10, padx=10, ipadx=137)
-
-
-root.mainloop()
+pygame.quit()
