@@ -12,7 +12,7 @@ pygame.display.set_caption("Typing Tester!")
 surface = pygame.Surface((width, height), pygame.SRCALPHA)
 timer = pygame.time.Clock()
 
-text = open('Python\Random\sentences.txt', "r").read().split("\n")
+text = open('Python\School\TypingTester\sentences.txt', "r").read().split("\n")
 
 #game variables
 fps = 60
@@ -25,13 +25,13 @@ start_time = None
 game_active = False
 
 #fonts and images
-bigfont = pygame.font.Font('Python\Random\Square.ttf', 100)
-header_font = pygame.font.Font('Python\Random\Square.ttf', 50)
-banner_font = pygame.font.Font('Python\Random\Square.ttf', 28)
-gfont = pygame.font.Font('Python\Random\RobotoMono-Light.ttf', 21)
-back_image = pygame.image.load('Python\Random\output-onlinepngtools.png')
+bigfont = pygame.font.Font('Python\School\TypingTester\Square.ttf', 100)
+header_font = pygame.font.Font('Python\School\TypingTester\Square.ttf', 50)
+banner_font = pygame.font.Font('Python\School\TypingTester\Square.ttf', 28)
+gfont = pygame.font.Font('Python\School\TypingTester\RobotoMono-Light.ttf', 21)
+back_image = pygame.image.load('Python\School\TypingTester\output-onlinepngtools.png')
 back_image = pygame.transform.scale(back_image, (50, 50))
-background_image = pygame.image.load('Python\Random\cluemoon.png')
+background_image = pygame.image.load('Python\School\TypingTester\cluemoon.png')
 background_image = pygame.transform.scale(background_image, (width, height))
 
 #gui
